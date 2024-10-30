@@ -55,8 +55,8 @@ function lanzarDados() {
     document.getElementById("sonidoDados").play(); // Reproduce sonido
     deshabilitarBotonLanzar();
 
-    let dado1 = (generarNumeroPseudoaleatorio() % 6) + 1;
-    let dado2 = (generarNumeroPseudoaleatorio() % 6) + 1;
+    let dado1 = Math.floor(Math.random() * 6) + 1;
+    let dado2 = Math.floor(Math.random() * 6) + 1;
     let suma = dado1 + dado2;
 
     animarDados(dado1, dado2);
