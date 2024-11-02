@@ -59,12 +59,16 @@ function lanzarDados() {
     let dado2 = Math.floor(Math.random() * 6) + 1;
     let suma = dado1 + dado2;
 
-    animarDados(dado1, dado2);
+    // Aplica la rotación correspondiente para mostrar la cara correcta
+    rotarDado(document.getElementById("dadoJuego1"), dado1);
+    rotarDado(document.getElementById("dadoJuego2"), dado2);
 
     setTimeout(() => {
         if ((suma === 7 || suma === 11) && puntoActual === null) {
             actualizarResultado(`¡Ganó la ronda con ${suma}!`);
             sumarPunto(turno);
+            puntoActual = null; // Limpiar punto actual al ganar
+            document.getElementById("puntoActualTexto").innerText = "Punto actual: ";
             if (puntosJugador1 >= 10 || puntosJugador2 >= 10) {
                 mostrarGanador();
             } else if (esTurnoComputadora()) {
@@ -75,20 +79,26 @@ function lanzarDados() {
         } else if ((suma === 2 || suma === 3 || suma === 12) && puntoActual === null) {
             actualizarResultado(`Perdió la ronda con ${suma}`);
             restarPunto(turno);
+            puntoActual = null; // Limpiar punto actual al perder
+            document.getElementById("puntoActualTexto").innerText = "Punto actual: ";
             finalizarTurno(); // Cambia de turno solo al perder
         } else {
             if (puntoActual === null) {
+                // Establece un nuevo punto
                 puntoActual = suma;
                 actualizarResultado(`El "punto" es: ${puntoActual}`);
+                document.getElementById("puntoActualTexto").innerText = `Punto actual: ${puntoActual}`;
                 if (esTurnoComputadora()) {
                     setTimeout(lanzarDados, 1200); // La computadora sigue lanzando si establece un "punto"
                 } else {
                     habilitarBotonLanzar();
                 }
             } else if (suma === puntoActual) {
+                // Gana la ronda al repetir el punto
                 actualizarResultado("Repitió el 'punto' y ganó la ronda.");
                 sumarPunto(turno);
-                puntoActual = null;
+                puntoActual = null; // Limpia el punto actual
+                document.getElementById("puntoActualTexto").innerText = "Punto actual: ";
                 if (puntosJugador1 >= 10 || puntosJugador2 >= 10) {
                     mostrarGanador();
                 } else if (esTurnoComputadora()) {
@@ -97,9 +107,11 @@ function lanzarDados() {
                     habilitarBotonLanzar(); // Permite que el jugador continúe lanzando
                 }
             } else if (suma === 7) {
+                // Pierde la ronda al sacar un 7
                 actualizarResultado("Salió un 7 y perdió la ronda.");
                 restarPunto(turno);
-                puntoActual = null;
+                puntoActual = null; // Limpia el punto actual
+                document.getElementById("puntoActualTexto").innerText = "Punto actual: ";
                 finalizarTurno();
             } else {
                 if (esTurnoComputadora()) {
@@ -111,10 +123,14 @@ function lanzarDados() {
         }
         actualizarPuntos();
     }, 1000);
+    
+    // Muestra los resultados en el elemento resultadosTexto
+    document.getElementById("resultadosTexto").innerText = `Resultados: ${dado1} y ${dado2}`;
 }
 
 
 
+/*
 function animarDados(dado1, dado2) {
     const dadoEl1 = document.getElementById("dado1");
     const dadoEl2 = document.getElementById("dado2");
@@ -129,7 +145,7 @@ function animarDados(dado1, dado2) {
         dadoEl2.innerText = `🎲 ${dado2}`;
     }, 1250);
 }
-
+*/
 function actualizarResultado(texto) {
     document.getElementById("resultadosTexto").innerText = texto;
 }
@@ -165,7 +181,6 @@ function finalizarTurno() {
         cambiarTurno();
     }
 }
-
 
 
 function esTurnoComputadora() {
@@ -260,4 +275,27 @@ function volverAlMenu() {
     actualizarPuntos();
 }
 
-
+function rotarDado(dado, numero) {
+    let rotacion;
+    switch (numero) {
+        case 1:
+            rotacion = "rotateX(0deg) rotateY(0deg)";
+            break;
+        case 4:
+            rotacion = "rotateY(90deg) rotateX(0deg)";
+            break;
+        case 3:
+            rotacion = "rotateY(180deg) rotateX(0deg)";
+            break;
+        case 2:
+            rotacion = "rotateY(-90deg) rotateX(0deg)";
+            break;
+        case 6:
+            rotacion = "rotateX(90deg) rotateY(0deg)";
+            break;
+        case 5:
+            rotacion = "rotateX(-90deg) rotateY(0deg)";
+            break;
+    }
+    dado.style.transform = rotacion;
+}

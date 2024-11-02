@@ -1,87 +1,210 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Juego 7-11</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
     <div class="container">
-        <h1>Juego 7-11</h1>
-        
-        <!-- Menú inicial -->
-        <div id="menuInicial">
-            <button onclick="mostrarInstrucciones()">Instrucciones</button>
-            <button onclick="mostrarOpcionesJuego()">Jugar</button>
+      <h1>Juego 7-11</h1>
+
+      <!-- Dados de animación inicial -->
+      <div id="animacionDados">
+        <div class="dado rojo" id="dadoIzquierdo">
+          <div class="punto"></div>
+          <div class="punto"></div>
+          <div class="punto"></div>
+          <div class="punto"></div>
+          <div class="punto"></div>
+          <div class="punto"></div>
+        </div>
+        <div class="dado rojo" id="dadoDerecho">
+          <div class="punto"></div>
+          <div class="punto"></div>
+          <div class="punto"></div>
+          <div class="punto"></div>
+          <div class="punto"></div>
+          <div class="punto"></div>
+        </div>
+      </div>
+
+      <!-- Menú inicial -->
+      <div id="menuInicial">
+        <button onclick="mostrarInstrucciones()">Instrucciones</button>
+        <button onclick="mostrarOpcionesJuego()">Jugar</button>
+      </div>
+
+      <!-- Instrucciones -->
+      <div id="instrucciones" class="oculto">
+        <h2>Instrucciones</h2>
+        <p>
+          <strong>7-11</strong> es un juego de dados donde dos jugadores se
+          turnan para lanzar. El objetivo es ser el primero en acumular 10
+          puntos. Las reglas son las siguientes:
+        </p>
+        <ul>
+          <li>
+            <strong>Ganas la ronda:</strong> Si lanzas un 7 o 11 en el primer
+            tiro.
+          </li>
+          <li>
+            <strong>Pierdes la ronda:</strong> Si lanzas un 2, 3 o 12 en el
+            primer tiro.
+          </li>
+          <li>
+            <strong>Estableces un "punto":</strong> Si lanzas cualquier otro
+            número. Luego debes repetir ese número antes de sacar un 7 para
+            ganar.
+          </li>
+        </ul>
+        <button onclick="ocultarInstrucciones()">Volver</button>
+      </div>
+
+      <!-- Selección del modo de juego -->
+      <div id="seleccionModoJuego" class="oculto">
+        <p>Escoje el modo de juego</p>
+        <button onclick="iniciarJuego(true)">JUGADOR VS CPU</button>
+        <button onclick="iniciarJuego(false)">JUGADOR VS JUGADOR</button>
+      </div>
+
+      <!-- Área del juego -->
+      <div id="gameArea" class="oculto">
+        <p id="turno">Turno del Jugador 1</p>
+        <div id="controls">
+          <button id="lanzarBtn" onclick="lanzarDados()">Lanzar Dados</button>
         </div>
 
-        <!-- Instrucciones -->
-        <div id="instrucciones" class="oculto">
-            <h2>Instrucciones</h2>
-            <p>
-                <strong>7-11</strong> es un juego de dados donde dos jugadores se turnan para lanzar. 
-                El objetivo es ser el primero en acumular 10 puntos. Las reglas son las siguientes:
-            </p>
-            <ul>
-                <li><strong>Ganas la ronda:</strong> Si lanzas un 7 o 11 en el primer tiro.</li>
-                <li><strong>Pierdes la ronda:</strong> Si lanzas un 2, 3 o 12 en el primer tiro.</li>
-                <li><strong>Estableces un "punto":</strong> Si lanzas cualquier otro número. Luego debes repetir ese número antes de sacar un 7 para ganar.</li>
-            </ul>
-            <button onclick="ocultarInstrucciones()">Volver</button>
+        <div id="animacionDados">
+          <div class="dadoInicial" id="dadoIzquierdo">
+            <div class="punto"></div>
+            <div class="punto"></div>
+            <div class="punto"></div>
+            <div class="punto"></div>
+            <div class="punto"></div>
+            <div class="punto"></div>
+          </div>
+          <div class="dadoInicial" id="dadoDerecho">
+            <div class="punto"></div>
+            <div class="punto"></div>
+            <div class="punto"></div>
+            <div class="punto"></div>
+            <div class="punto"></div>
+            <div class="punto"></div>
+          </div>
         </div>
 
-        <!-- Selección del modo de juego -->
-        <div id="seleccionModoJuego" class="oculto">
-            <p>¿Quieres jugar contra la computadora?</p>
-            <button onclick="iniciarJuego(true)">Sí</button>
-            <button onclick="iniciarJuego(false)">No</button>
-        </div>
-
-        <!-- Área del juego -->
-        <div id="gameArea" class="oculto">
-            <p id="turno">Turno del Jugador 1</p>
-            <div id="controls">
-                <button id="lanzarBtn" onclick="lanzarDados()">Lanzar Dados</button>
+        <!-- Contenedor de resultados -->
+        <div class="resultados">
+          <p id="resultadosTexto"></p>
+          <p id="puntoActualTexto"></p>
+          <div id="dados">
+            <!-- Dado del Juego 1 -->
+            <div class="dadoJuego" id="dadoJuego1">
+              <div class="caraJuego cara1">
+                <div class="puntoJuego centro"></div>
+              </div>
+              <div class="caraJuego cara2">
+                <div class="puntoJuego esquina-superior-izquierda"></div>
+                <div class="puntoJuego esquina-inferior-derecha"></div>
+              </div>
+              <div class="caraJuego cara3">
+                <div class="puntoJuego esquina-superior-izquierda"></div>
+                <div class="puntoJuego centro"></div>
+                <div class="puntoJuego esquina-inferior-derecha"></div>
+              </div>
+              <div class="caraJuego cara4">
+                <div class="puntoJuego esquina-superior-izquierda"></div>
+                <div class="puntoJuego esquina-superior-derecha"></div>
+                <div class="puntoJuego esquina-inferior-izquierda"></div>
+                <div class="puntoJuego esquina-inferior-derecha"></div>
+              </div>
+              <div class="caraJuego cara5">
+                <div class="puntoJuego esquina-superior-izquierda"></div>
+                <div class="puntoJuego esquina-superior-derecha"></div>
+                <div class="puntoJuego centro"></div>
+                <div class="puntoJuego esquina-inferior-izquierda"></div>
+                <div class="puntoJuego esquina-inferior-derecha"></div>
+              </div>
+              <div class="caraJuego cara6">
+                <div class="puntoJuego esquina-superior-izquierda"></div>
+                <div class="puntoJuego esquina-superior-derecha"></div>
+                <div class="puntoJuego centro-izquierda"></div>
+                <div class="puntoJuego centro-derecha"></div>
+                <div class="puntoJuego esquina-inferior-izquierda"></div>
+                <div class="puntoJuego esquina-inferior-derecha"></div>
+              </div>
             </div>
-            
-            <div class="resultados">
-                <p id="resultadosTexto"></p>
-                <div id="dados">
-                    <div class="dado" id="dado1">🎲</div>
-                    <div class="dado" id="dado2">🎲</div>
-                </div>
-            </div>
-        </div>
 
-        <!-- Puntaciones-->
-        <div id="scoreboard" class="oculto">
-            <h2>Puntuaciones</h2>
-            <p id="puntosJugador1">Jugador 1: 0 puntos</p>
-            <p id="puntosJugador2">Jugador 2: 0 puntos</p>
-            <button id="volverBtn" onclick="volverAlMenu()">Volver</button>
-        </div>
-        
-        <!-- Mensaje Victoria-->
-        <div id="modalVictoria" class="modal oculto">
-            <div class="modal-content">
-                <h2 id="mensajeVictoria"></h2>
-                <button onclick="reiniciarJuego()">Reiniciar</button>
+            <!-- Dado del Juego 2 -->
+            <div class="dadoJuego" id="dadoJuego2">
+              <div class="caraJuego cara1">
+                <div class="puntoJuego centro"></div>
+              </div>
+              <div class="caraJuego cara2">
+                <div class="puntoJuego esquina-superior-izquierda"></div>
+                <div class="puntoJuego esquina-inferior-derecha"></div>
+              </div>
+              <div class="caraJuego cara3">
+                <div class="puntoJuego esquina-superior-izquierda"></div>
+                <div class="puntoJuego centro"></div>
+                <div class="puntoJuego esquina-inferior-derecha"></div>
+              </div>
+              <div class="caraJuego cara4">
+                <div class="puntoJuego esquina-superior-izquierda"></div>
+                <div class="puntoJuego esquina-superior-derecha"></div>
+                <div class="puntoJuego esquina-inferior-izquierda"></div>
+                <div class="puntoJuego esquina-inferior-derecha"></div>
+              </div>
+              <div class="caraJuego cara5">
+                <div class="puntoJuego esquina-superior-izquierda"></div>
+                <div class="puntoJuego esquina-superior-derecha"></div>
+                <div class="puntoJuego centro"></div>
+                <div class="puntoJuego esquina-inferior-izquierda"></div>
+                <div class="puntoJuego esquina-inferior-derecha"></div>
+              </div>
+              <div class="caraJuego cara6">
+                <div class="puntoJuego esquina-superior-izquierda"></div>
+                <div class="puntoJuego esquina-superior-derecha"></div>
+                <div class="puntoJuego centro-izquierda"></div>
+                <div class="puntoJuego centro-derecha"></div>
+                <div class="puntoJuego esquina-inferior-izquierda"></div>
+                <div class="puntoJuego esquina-inferior-derecha"></div>
+              </div>
             </div>
+          </div>
         </div>
-        
+      </div>
 
-        <!-- Mensaje de transición de turno -->
-        <div id="mensajeTurno" class="oculto mensaje-turno">Cambio de turno...</div>
-        
-        <!-- Audio para sonido de dados -->
-        <audio id="sonidoDados" src="Resource/Sounds/DadosLentos.mp3"></audio>
-        
+      <!-- Puntaciones-->
+      <div id="scoreboard" class="oculto">
+        <h2>Puntuaciones</h2>
+        <p id="puntosJugador1">Jugador 1: 0 puntos</p>
+        <p id="puntosJugador2">Jugador 2: 0 puntos</p>
+        <button id="volverBtn" onclick="volverAlMenu()">Volver</button>
+      </div>
+
+      <!-- Mensaje Victoria-->
+      <div id="modalVictoria" class="modal oculto">
+        <div class="modal-content">
+          <h2 id="mensajeVictoria"></h2>
+          <button onclick="reiniciarJuego()">Reiniciar</button>
+        </div>
+      </div>
+
+      <!-- Mensaje de transición de turno -->
+      <div id="mensajeTurno" class="oculto mensaje-turno">
+        Cambio de turno...
+      </div>
+
+      <!-- Audio para sonido de dados -->
+      <audio id="sonidoDados" src="Resource/Sounds/DadosLentos.mp3"></audio>
     </div>
     <!-- Footer -->
     <footer id="footer">
-        <p>&copy; 2024 Juego 7-11 | Creado por [Ivan Arroyo y Elkin Rodriguez]</p>
+      <p>&copy; 2024 Juego 7-11 | Creado por [Ivan Arroyo y Elkin Rodriguez]</p>
     </footer>
     <script src="script.js"></script>
-</body>
+  </body>
 </html>
