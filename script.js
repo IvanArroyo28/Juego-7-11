@@ -34,29 +34,93 @@ function iniciarJuego(contraComputadora) {
     habilitarBotonLanzar();
 }
 
-//Generacion Pseudo-Aleatoria
+
+// Generación Pseudo-Aleatoria con restricciones específicas
 function generadorCongruencialMixto(semilla, a, c, m) {
     return (a * semilla + c) % m;
 }
 
-// Parámetros para el método congruencial mixto
-let semilla = Math.floor(Math.random() * 100); // Semilla inicial aleatoria
-const m = 100; // Escoge un valor suficientemente grande para m
-const a = Math.floor(Math.random() * (m - 1)) + 1; // Escoge a aleatorio en rango 1 < a < m
-const c = Math.floor(Math.random() * m); // Escoge c aleatorio entre 0 y m
-
-function generarNumeroPseudoaleatorio() {
-    semilla = generadorCongruencialMixto(semilla, a, c, m);
-    return semilla;
+// Función para verificar si un número es primo
+function esPrimo(num) {
+    if (num <= 1) return false;
+    if (num <= 3) return true;
+    if (num % 2 === 0 || num % 3 === 0) return false;
+    for (let i = 5; i * i <= num; i += 6) {
+        if (num % i === 0 || num % (i + 2) === 0) return false;
+    }
+    return true;
 }
 
+// Generar un número primo menor a 2^64
+function generarM() {
+    let m;
+    do {
+        m = Math.floor(Math.random() * (2 ** 16)) + 1; // Usa 2^16 para evitar desbordamientos en JS
+    } while (!esPrimo(m));
+    return m;
+}
+
+// Generar 'a' como un número impar no divisible entre 3 o 5
+function generarA() {
+    let a;
+    do {
+        a = Math.floor(Math.random() * 100) + 1;
+    } while (a % 2 === 0 || a % 3 === 0 || a % 5 === 0);
+    return a;
+}
+
+// Generar 'c' relativamente primo con 'm', impar, y cumpliendo c % 8 = 5
+function generarC(m) {
+    let c;
+    do {
+        c = Math.floor(Math.random() * m);
+    } while (c % 8 !== 5 || c % 2 === 0 || gcd(c, m) !== 1);
+    return c;
+}
+
+// Función para calcular el máximo común divisor
+function gcd(a, b) {
+    while (b !== 0) {
+        [a, b] = [b, a % b];
+    }
+    return a;
+}
+
+// Generar valores iniciales bajo las restricciones
+const m = generarM();
+const a = generarA();
+const c = generarC(m);
+let semilla = Math.floor(Math.random() * m); // Cualquier valor inicial para x en el rango [0, m)
+
+// Función para generar un número pseudoaleatorio
+function generarNumeroPseudoaleatorio() {
+    semilla = generadorCongruencialMixto(semilla, a, c, m);
+    return semilla / m; // Normaliza el valor entre 0 y 1
+}
+
+function obtenerValorDado(numeroAleatorio) {
+    if (numeroAleatorio < 1 / 6) {
+        return 1;
+    } else if (numeroAleatorio < 2 / 6) {
+        return 2;
+    } else if (numeroAleatorio < 3 / 6) {
+        return 3;
+    } else if (numeroAleatorio < 4 / 6) {
+        return 4;
+    } else if (numeroAleatorio < 5 / 6) {
+        return 5;
+    } else {
+        return 6;
+    }
+}
 
 function lanzarDados() {
     document.getElementById("sonidoDados").play(); // Reproduce sonido
     deshabilitarBotonLanzar();
 
-    let dado1 = Math.floor(Math.random() * 6) + 1;
-    let dado2 = Math.floor(Math.random() * 6) + 1;
+    // Genera valores de los dados usando el método congruencial mixto
+    let dado1 = obtenerValorDado(generarNumeroPseudoaleatorio());
+    let dado2 = obtenerValorDado(generarNumeroPseudoaleatorio());
     let suma = dado1 + dado2;
 
     // Aplica la rotación correspondiente para mostrar la cara correcta
@@ -128,24 +192,6 @@ function lanzarDados() {
     document.getElementById("resultadosTexto").innerText = `Resultados: ${dado1} y ${dado2}`;
 }
 
-
-
-/*
-function animarDados(dado1, dado2) {
-    const dadoEl1 = document.getElementById("dado1");
-    const dadoEl2 = document.getElementById("dado2");
-
-    dadoEl1.classList.add("rolling");
-    dadoEl2.classList.add("rolling");
-
-    setTimeout(() => {
-        dadoEl1.classList.remove("rolling");
-        dadoEl2.classList.remove("rolling");
-        dadoEl1.innerText = `🎲 ${dado1}`;
-        dadoEl2.innerText = `🎲 ${dado2}`;
-    }, 1250);
-}
-*/
 function actualizarResultado(texto) {
     document.getElementById("resultadosTexto").innerText = texto;
 }
