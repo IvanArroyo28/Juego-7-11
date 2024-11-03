@@ -98,6 +98,7 @@ function generarNumeroPseudoaleatorio() {
     return semilla / m; // Normaliza el valor entre 0 y 1
 }
 
+// Asigna un número de dado de 1 a 6
 function obtenerValorDado(numeroAleatorio) {
     if (numeroAleatorio < 1 / 6) {
         return 1;

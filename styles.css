@@ -378,7 +378,7 @@ ul {
 
 .resultados {
     position: relative; /* o absolute */
-    top: -220px; /* Ajusta hacia arriba */
+    top: 0px; /* Ajusta hacia arriba */
     margin-top: 0;
 }
 
